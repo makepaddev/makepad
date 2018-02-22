@@ -22,6 +22,8 @@ dec_data(LogEntry*, pLogTop)
 dec_data(HFONT, hfontLog)
 dec_callbk(void, onTailChange, sLogControl self, bool change)
 dec_table(Window, LogControl)
+dec_method(LogControl, void, setTailCheck, bool checked)
+dec_method(LogControl, void, clearLog)
 dec_method(LogControl, void, logBuffer, bool error, const char *pBuf)
 dec_method(LogControl, void, createWindow, sWindow parentWindow, HINSTANCE hInstance, int nCmdShow)
 dec_method(LogControl, LRESULT, windowProc, UINT message, WPARAM wParam, LPARAM lParam)
@@ -73,6 +75,8 @@ def_method(LogControl, void, logBuffer, bool error, const char *pBuf) {
 }
 
 def_method(LogControl, void, createWindow, sWindow parentWindow, HINSTANCE hInstance, int nCmdShow){
+	self->parentWindow = parentWindow;
+
 	WNDCLASSEXW wcex;
 
 	wcex.cbSize = sizeof(WNDCLASSEX);
@@ -106,6 +110,34 @@ def_method(LogControl, void, createWindow, sWindow parentWindow, HINSTANCE hInst
 	ShowWindow(self->hWnd, nCmdShow);
 	UpdateWindow(self->hWnd);
 }
+
+def_method(LogControl, void, setTailCheck, bool checked) {
+	self->tailLog = checked;
+	if (checked) {
+		SCROLLINFO info;
+		info.cbSize = sizeof(SCROLLINFO);
+		info.fMask = SIF_POS | SIF_RANGE | SIF_PAGE;
+		GetScrollInfo(self->hWnd, SB_VERT, &info);
+		info.fMask = SIF_POS | SIF_TRACKPOS;
+		info.nTrackPos = info.nPos = info.nTrackPos = info.nMax - (int)info.nPage;
+		SetScrollInfo(self->hWnd, SB_VERT, &info, true);
+		SendMessage(self->hWnd, WM_VSCROLL, 0, 0);
+	}
+}
+
+def_method(LogControl, void, clearLog) {
+	LogEntry *iter = self->pLogLast, *next;
+	while (iter) {
+		next = iter->pPrev;
+		selfFree(iter);
+		iter = next;
+	}
+	self->pLogTop = self->pLogLast = 0;
+	self->numLogEntries = 0;
+	self->newLogEntries = 0;
+	InvalidateRect(self->hWnd, 0, false);
+}
+
 int ctr = 0;
 def_method(LogControl, LRESULT, windowProc, UINT message, WPARAM wParam, LPARAM lParam){
 	switch (message) {
@@ -317,6 +349,8 @@ def_bind(LogControl, destructor)
 def_bind(LogControl, createWindow)
 def_bind(LogControl, windowProc)
 def_bind(LogControl, logBuffer)
+def_bind(LogControl, setTailCheck)
+def_bind(LogControl, clearLog)
 def_close(Window, LogControl)
 
 #endif

@@ -33,11 +33,20 @@ static LRESULT CALLBACK StaticWindowProc(HWND hWnd, UINT message, WPARAM wParam,
  
 void onTailChangeToolBar(sToolBar tb, bool checked) {
 	sLogWindow self = tb->parentWindow.ptr();
+	(*self->logControl)->setTailCheck(self->logControl, checked);
+
 }
 
 void onTailChangeLogControl(sLogControl lc,  bool checked) {
 	sLogWindow self = lc->parentWindow.ptr();
+	(*self->toolBar)->setTailCheck(self->toolBar, checked);
 }
+
+void onClearToolBar(sToolBar tb) {
+	sLogWindow self = tb->parentWindow.ptr();
+	(*self->logControl)->clearLog(self->logControl);
+}
+
 
 def_method(LogWindow, void, createWindow, HINSTANCE hInstance, int nCmdShow){
 	WNDCLASSEXW wcex;
@@ -68,6 +77,7 @@ def_method(LogWindow, void, createWindow, HINSTANCE hInstance, int nCmdShow){
 
 	self->toolBar.create(self);
 	self->toolBar->onTailChange = onTailChangeToolBar;
+	self->toolBar->onClear = onClearToolBar;
 	(*self->toolBar)->createWindow(self->toolBar, self.ptr(), hInstance, nCmdShow);
 	
 	self->logControl.create(self);

@@ -14,14 +14,13 @@
 dec_open(Base, Window)
 dec_data(HWND, hWnd)
 dec_weak(Window, parentWindow)
-dec_table(Base, Window) 
-dec_close(Base, Window) 
+dec_table(Base, Window)
+dec_close(Base, Window)
 
 #ifdef def_Window
 
 def_override(Base, Window, void, constructor) {
 	self_override(Window)
-	   
 }
 
 def_open(Base, Window)
@@ -30,4 +29,4 @@ def_weak(Window, parentWindow)
 def_bind(Window, constructor)
 def_close(Base, Window)
   
-#endif  
+#endif
