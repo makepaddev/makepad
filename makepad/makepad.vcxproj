@@ -187,9 +187,11 @@ copy $(ProjectDir)ChakraCore\Build\VcBuild\bin\x64_release\ChakraCore.dll $(OutD
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Base.cpp" />
+    <ClCompile Include="ClassTemplate.cpp" />
     <ClCompile Include="LogControl.cpp" />
     <ClCompile Include="LogWindow.cpp" />
     <ClCompile Include="makepad.cpp" />
+    <ClCompile Include="ProcManager.cpp" />
     <ClCompile Include="ToolBar.cpp" />
     <ClCompile Include="Window.cpp" />
   </ItemGroup>

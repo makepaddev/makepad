@@ -41,6 +41,12 @@
     <ClCompile Include="LogControl.cpp">
       <Filter>Source Files\Windows UI</Filter>
     </ClCompile>
+    <ClCompile Include="ClassTemplate.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ProcManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="makepad.rc">
